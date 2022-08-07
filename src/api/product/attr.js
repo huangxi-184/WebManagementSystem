@@ -22,3 +22,13 @@ export function reqCategory3List(category2Id) {
         method: "get",
     })
 }
+
+//   /admin/product/attrInfoList/{category1Id}/{category2Id}/{category3Id}
+
+// 获取平台属性的接口
+export function reqAttrList(category1Id,category2Id,category3Id) {
+    return request({
+        url: `/admin/product/attrInfoList/${category1Id}/${category2Id}/${category3Id}`,
+        method: "get",
+    })
+}

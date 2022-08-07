@@ -4,7 +4,30 @@
             <CategorySelect @getCategoryId="getCategoryId"></CategorySelect>
 
         </el-card>
-        <el-card></el-card>
+        <el-card>
+            <el-button type="primary" icon="el-icon-plus">添加属性</el-button>
+            <el-table :data="attrList" border style="width: 100%">
+                <el-table-column type="index" label="序号" width="80" align="center">
+                </el-table-column>
+                <el-table-column prop="attrName" label="属性名称" width="150">
+                </el-table-column>
+                <el-table-column prop="tmName" label="属性值列表">
+                    <template slot-scope="{row,$index}">
+                        <el-tag type="success" v-for="(tag, index) in row.attrValueList" :key="tag.id"
+                            style="margin:0px 20px">{{ tag.valueName }}</el-tag>
+                        <!-- /static/default.jpg 是直接放在public下的static文件夹中 static可以不写./ 只写/ -->
+                    </template>
+                </el-table-column>
+                <el-table-column prop="tmName" label="操作" width="150">
+                    <template slot-scope="{row,$index}">
+                        <el-button type="warning" icon="el-icon-edit" size="mini">
+                        </el-button>
+                        <el-button type="danger" icon="el-icon-delete" size="mini">
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </el-card>
     </div>
 </template>
 
@@ -17,6 +40,7 @@ export default {
             category1Id: '',
             category2Id: '',
             category3Id: '',
+            attrList: [],
         }
     },
     methods: {
@@ -32,11 +56,15 @@ export default {
             }
             else {
                 this.category3Id = categoryId
-
+                this.getAttrList()
             }
         },
-        
 
+        async getAttrList() {
+            const { category1Id, category2Id, category3Id } = this
+            let reslut = await this.$API.attr.reqAttrList(category1Id, category2Id, category3Id)
+            this.attrList = reslut.data
+        },
 
 
     }

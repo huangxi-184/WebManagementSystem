@@ -19,7 +19,8 @@
             <el-table-column prop="address" label="操作">
                 <template slot-scope="{row,$index}">
                     <el-button type="warning" icon="el-icon-edit" size="mini" @click="updateDialog(row)">修改</el-button>
-                    <el-button type="danger" icon="el-icon-delete" size="mini">删除</el-button>
+                    <el-button type="danger" icon="el-icon-delete" size="mini" @click="deletetradeMark(row)">删除
+                    </el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -32,13 +33,15 @@
         </el-pagination>
 
         <!-- 弹窗-->
-        <el-dialog :title="form.id ? '修改品牌':'添加品牌'" :visible.sync="dialogFormVisible" @closed='clearformdata'>
-            <el-form :model="form" style="width:80%">
-                <el-form-item label="品牌名称" :label-width="formLabelWidth">
+        <!-- Form 组件提供了表单验证的功能，只需要通过 rules 属性传入约定的验证规则，
+        并将 Form-Item 的 prop 属性设置为需校验的字段名即可。 -->
+        <el-dialog :title="form.id ? '修改品牌' : '添加品牌'" :visible.sync="dialogFormVisible" @closed='clearformdata'>
+            <el-form :model="form" style="width:80%" :rules="rules" ref="ruleFrom">
+                <el-form-item label="品牌名称" :label-width="formLabelWidth" prop="tmName">
                     <el-input v-model="form.tmName" autocomplete="off"></el-input>
                 </el-form-item>
                 <!-- action 图片上传的地址 有专门的接口-->
-                <el-form-item label="品牌LOGO" :label-width="formLabelWidth">
+                <el-form-item label="品牌LOGO" :label-width="formLabelWidth" prop="logoUrl">
                     <el-upload class="avatar-uploader" action="/dev-api/admin/product/fileUpload"
                         :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
                         <img v-if="form.logoUrl" :src="form.logoUrl" class="avatar">
@@ -68,13 +71,22 @@ export default {
             list: [],
             dialogFormVisible: false,
             form: {
-                id:'',
                 tmName: '',
                 logoUrl: ''
             },
 
             formLabelWidth: '120px',
-            
+            rules: {
+                tmName: [
+                    { required: true, message: '请输入品牌名称', trigger: 'blur' },
+                    { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'change' }
+                ],
+                logoUrl: [
+                    { required: true, message: '请选择品牌图片' }
+                ],
+
+            },
+
         }
     },
     methods: {
@@ -85,28 +97,25 @@ export default {
         handleCurrentChange(pager) {
             this.page = pager
             this.getPageList(pager)
-            console.log('###'+ pager)
-            console.log('***'+ this.page)
-            
         },
         async getPageList(pager = 1) {
             this.page = pager
             const { page, limit } = this
 
-            let result = await this.$API.tradeMark.reqTradeMarkList(page,limit)
-            
+            let result = await this.$API.tradeMark.reqTradeMarkList(page, limit)
+
             if (result.code == 200) {
                 this.total = result.data.total
                 this.list = result.data.records
             }
-            
+
         },
         showDialog() {
             this.dialogFormVisible = true
         },
         updateDialog(row) {
             this.dialogFormVisible = true
-            this.form = {...row} 
+            this.form = { ...row }
         },
         // res 是上传成功后 服务器返回给前端的数据
         // file 相同
@@ -130,17 +139,46 @@ export default {
                 logoUrl: ''
             }
         },
-        async addOrUpdateTradeMark() {
-            this.dialogFormVisible = false
-            // if()
-            await this.$API.tradeMark.reqAddOrUpdateTradeMark(this.form)
-            // 拦截器已经处理过了 成功后再次获取列表
-            this.$message({
-                showClose: true,
-                message: this.form.id ? '修改品牌成功':'添加品牌成功',
-                type: 'success'
+        addOrUpdateTradeMark() {
+
+            this.$refs.ruleFrom.validate(async (success) => {
+                if (success) {
+                    this.dialogFormVisible = false
+                    await this.$API.tradeMark.reqAddOrUpdateTradeMark(this.form)
+                    // 拦截器已经处理过了 成功后再次获取列表
+                    this.$message({
+                        showClose: true,
+                        message: this.form.id ? '修改品牌成功' : '添加品牌成功',
+                        type: 'success'
+                    });
+                    this.getPageList(this.form.id ? this.page : 1)
+                } else {
+                    return false
+                }
+
+            })
+
+        },
+        deletetradeMark(row) {
+            this.$confirm(`此操作将会永久删除${row.tmName}, 是否继续?`, '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                await this.$API.tradeMark.reqDeleteTradeMark(row.id)
+                this.$message({
+                    type: 'success',
+                    message: '删除成功!'
+                });
+                // 有数据就保留原页面，没有数据就去上一页
+                this.getPageList(this.list.length >1 ? this.page : this.page - 1)
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });
             });
-            this.getPageList(this.form.id ? this.page : 1)
+
         }
 
     },

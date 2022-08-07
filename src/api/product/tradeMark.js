@@ -27,4 +27,11 @@ export function reqAddOrUpdateTradeMark(tradeMarkList) {
     }
 }
 
+export function reqDeleteTradeMark(id) {
+    return request({
+        url: `/admin/product/baseTrademark/remove/${id}`,
+        method: "delete",
+
+    })
+}
 

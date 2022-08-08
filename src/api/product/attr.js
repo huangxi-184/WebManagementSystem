@@ -32,3 +32,12 @@ export function reqAttrList(category1Id,category2Id,category3Id) {
         method: "get",
     })
 }
+
+// 添加属性和属性值的接口
+export function reqAddAttr(data) {
+    return request({
+        url: `/admin/product/saveAttrInfo`,
+        method: "post",
+        data
+    })
+}

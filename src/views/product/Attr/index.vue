@@ -17,7 +17,7 @@
                     </el-table-column>
                     <el-table-column prop="tmName" label="属性值列表">
                         <template slot-scope="{row,$index}">
-                            <el-tag type="success" v-for="(tag, index) in row.attrValueList" :key="tag.id "
+                            <el-tag type="success" v-for="(tag, index) in row.attrValueList" :key="tag.id"
                                 style="margin:0px 20px">{{ tag.valueName }}</el-tag>
                             <!-- /static/default.jpg 是直接放在public下的static文件夹中 static可以不写./ 只写/ -->
                         </template>
@@ -47,8 +47,9 @@
                     </el-table-column>
                     <el-table-column prop="prop" label="属性值名称" width="width">
                         <template slot-scope='{row,$index}'>
-                            <el-input v-if="row.flag" v-model="row.valueName" placeholder="请输入属性值名称" size="mini" @blur="row.flag = false" @keyup.native.enter="row.flag = false"></el-input>
-                            <span v-else  @click="row.flag = true" style="display: block;">{{row.valueName}}</span>
+                            <el-input v-if="row.flag" v-model="row.valueName" placeholder="请输入属性值名称" size="mini"
+                                @blur="toLook(row)" @keyup.native.enter="toLook(row)"></el-input>
+                            <span v-else @click="row.flag = true" style="display: block;">{{ row.valueName }}</span>
                         </template>
                     </el-table-column>
                     <el-table-column prop="prop" label="操作" width="width">
@@ -87,7 +88,7 @@ export default {
                 categoryId: 0, //  三级分类的ID 对象中属性执行时间顺序不定
                 categoryLevel: 3,
             },
-            
+
 
 
         }
@@ -142,6 +143,31 @@ export default {
             // 数据对象里面有数组 数组里面有对象 所以需要进行深拷贝 引入lodash 实现深拷贝
             this.attrInfo = cloneDeep(row)
         },
+        toLook(row) {
+            if (row.valueName.trim() == '') {
+                this.$message({
+                    message: "请输入一个合法的属性值",
+                    type: ""
+                })
+
+                return
+            }
+            let isRepat = this.attrInfo.attrValueList.some((item) => {
+                if (row !== item) {
+                    return row.valueName == item.valueName
+                }
+            })
+            if (isRepat) {
+                this.$message({
+                    message: "平台属性值重复",
+                    type: ""
+                }
+                )
+                return
+            }
+            // 新增的属性值 不能与已有的属性值重复
+            row.flag = false
+        }
 
 
     }

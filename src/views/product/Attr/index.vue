@@ -111,7 +111,6 @@ export default {
                 this.getAttrList()
             }
         },
-
         async getAttrList() {
             const { category1Id, category2Id, category3Id } = this
             let reslut = await this.$API.attr.reqAttrList(category1Id, category2Id, category3Id)

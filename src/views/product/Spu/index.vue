@@ -7,7 +7,7 @@
             <div>
                 <!-- 展示Spu列表的结构 -->
                 <el-button type="primary" icon="el-icon-plus">添加Spu</el-button>
-                <el-table style="width:100%;" border>
+                <el-table style="width:100%;" border :date="records">
                     <el-table-column type="index" label="序号" width="80px" align="center">
                     </el-table-column>
                     <el-table-column prop="prop" label="Spu名称" width="width">
@@ -23,10 +23,7 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-                    style="margin-top: 20px; text-align: center;" :current-page="page" :page-sizes="[3, 5, 10, 100]"
-                    :page-size="limit" layout="prev, pager, next, jumper,->,sizes,total" :total="total">
-                </el-pagination>
+
             </div>
         </el-card>
     </div>
@@ -42,6 +39,11 @@ export default {
             category2Id: '',
             category3Id: '',
             show: false,
+            page: 1,
+            limit: 3,
+            records: [],
+            total: 0,
+
 
         }
     },
@@ -63,8 +65,17 @@ export default {
             }
         },
     },
-    getSpuList() {
-
+    async getSpuList() {
+        const { page, limit, category3Id } = this
+        let result = await this.$API.spu.reqSpuList(page, limit, category3Id)
+        this.total = result.data.total
+        this.records = result.data.records
+    },
+    handleSizeChange() {
+        console.log(11)
+    },
+    handleCurrentChange() {
+        console.log(11)
     }
 }
 

@@ -25,7 +25,7 @@
                         <template slot-scope="{row,$index}">
                             <el-button type="warning" icon="el-icon-edit" size="mini" @click="updateAttr(row)">
                             </el-button>
-                            <el-button type="danger" icon="el-icon-delete" size="mini">
+                            <el-button type="danger" icon="el-icon-delete" size="mini" @click="deleteAttr(row)">
                             </el-button>
                         </template>
                     </el-table-column>
@@ -59,7 +59,8 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-button type="primary" @click="saveOrUpdateAttr" :disabled="attrInfo.attrValueList.length<1">保存</el-button>
+                <el-button type="primary" @click="saveOrUpdateAttr" :disabled="attrInfo.attrValueList.length < 1">保存
+                </el-button>
                 <el-button @click="isShowTable = true">取消</el-button>
             </div>
 
@@ -205,12 +206,16 @@ export default {
                 })
                 this.getAttrList()
             }
-            catch (error) { 
+            catch (error) {
                 this.$message({
-                    type:"error",
-                    message:'保存失败'
+                    type: "error",
+                    message: '保存失败'
                 })
             }
+        },
+       async deleteAttr(row){
+            await console.log(row)
+            await this.$API.attr.reqdeleteAttr(row.attrValueList.pop.attrId)
         }
 
 

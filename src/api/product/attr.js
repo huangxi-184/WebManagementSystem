@@ -41,3 +41,11 @@ export function reqAddOrUpdateAttr(data) {
         data
     })
 }
+
+// 删除属性接口
+export function reqdeleteAttr(attrId) {
+    return request({
+        url: `/admin/product/deleteAttr/${attrId}`,
+        method: "delete",
+    })
+}

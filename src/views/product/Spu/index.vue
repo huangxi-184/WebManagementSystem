@@ -7,12 +7,12 @@
             <div>
                 <!-- 展示Spu列表的结构 -->
                 <el-button type="primary" icon="el-icon-plus">添加Spu</el-button>
-                <el-table style="width:100%;" border :date="records">
+                <el-table style="width:100%;" border :data="records">
                     <el-table-column type="index" label="序号" width="80px" align="center">
                     </el-table-column>
-                    <el-table-column prop="prop" label="Spu名称" width="width">
+                    <el-table-column prop="spuName" label="Spu名称" width="width">
                     </el-table-column>
-                    <el-table-column prop="prop" label="Spu描述" width="width">
+                    <el-table-column prop="description" label="Spu描述" width="width">
                     </el-table-column>
                     <el-table-column prop="prop" label="操作" width="width">
                         <template slot-scope="{row,$index}">
@@ -43,8 +43,6 @@ export default {
             limit: 3,
             records: [],
             total: 0,
-
-
         }
     },
 
@@ -64,19 +62,20 @@ export default {
                 this.getSpuList()
             }
         },
+        async getSpuList() {
+            const { page, limit, category3Id } = this
+            let result = await this.$API.spu.reqSpuList(page, limit, category3Id)
+            this.total = result.data.total
+            this.records = result.data.records
+        },
+        handleSizeChange() {
+            console.log(11)
+        },
+        handleCurrentChange() {
+            console.log(11)
+        }
     },
-    async getSpuList() {
-        const { page, limit, category3Id } = this
-        let result = await this.$API.spu.reqSpuList(page, limit, category3Id)
-        this.total = result.data.total
-        this.records = result.data.records
-    },
-    handleSizeChange() {
-        console.log(11)
-    },
-    handleCurrentChange() {
-        console.log(11)
-    }
+
 }
 
 

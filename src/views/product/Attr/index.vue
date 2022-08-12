@@ -59,8 +59,7 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-button type="primary" @click="saveOrUpdateAttr" :disabled="attrInfo.attrValueList.length < 1">保存
-                </el-button>
+                <el-button type="primary" @click="saveOrUpdateAttr" :disabled="attrInfo.attrValueList.length < 1">保存</el-button>
                 <el-button @click="isShowTable = true">取消</el-button>
             </div>
 
@@ -111,6 +110,7 @@ export default {
                 this.getAttrList()
             }
         },
+
         async getAttrList() {
             const { category1Id, category2Id, category3Id } = this
             let reslut = await this.$API.attr.reqAttrList(category1Id, category2Id, category3Id)
@@ -205,16 +205,17 @@ export default {
                 })
                 this.getAttrList()
             }
-            catch (error) {
+            catch (error) { 
                 this.$message({
                     type: "error",
                     message: '保存失败'
                 })
             }
         },
-       async deleteAttr(row){
+        async deleteAttr(row){
             await console.log(row)
-            await this.$API.attr.reqdeleteAttr(row.attrValueList.pop.attrId)
+            await this.$API.attr.reqdeleteAttr(row.attrValueList[0].attrId)
+            this.getAttrList()
         }
 
 

@@ -28,7 +28,7 @@ export function reqSpuImageList(spuId) {
         method: "get",
     })
 }
-
+// 获取销售属性列表
 export function reqBaseSaleAttrList() {
     return request({
         url: `/admin/product/baseSaleAttrList`,

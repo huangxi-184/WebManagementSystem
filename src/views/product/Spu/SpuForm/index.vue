@@ -22,7 +22,7 @@
                     <img width="100%" :src="dialogImageUrl" alt="">
                 </el-dialog>
             </el-form-item>
-            <el-form-item label="销售属性" prop="prop">
+            <el-form-item label="销售属性 ">
                 <el-select :placeholder="`还有${unSelectSaleAttr.length}未选择`" v-model="attrId">
                     <el-option :label="unselect.name" :value="unselect.id" v-for="(unselect, index) in unSelectSaleAttr"
                         :key="unselect.id"></el-option>
@@ -49,7 +49,7 @@
                     </el-table-column>
                     <el-table-column prop="prop" label="操作" width="width">
                         <template slot-scope="{row,$index}">
-                            <el-butto></el-butto>
+                            <el-button type="danger" size="small">删除</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -69,22 +69,18 @@ export default {
     name: "SpuForm",
     data() {
         return {
-            
             inputVisible: false,
             inputValue: '',
             dialogImageUrl: '',
             dialogVisible: false,
-            spu: {
-                category3Id: 0,
-                description: 0,
-                spuName: " ",
+            spu: {               
+                description: "",
+                spuImageList: [],
+                spuName: "",
+                spuSaleAttrList: [],
                 tmId: 0,
-                spuImageList: [
-                ],
-                spuSaleAttrList: [
-                ],
             },
-            attrId,
+            attrId: 0,
             // 存储SPU信息属性
             tradeMarkList: [],
             spuImageList: [],//存储SPU的图片数据
@@ -103,19 +99,27 @@ export default {
             // 获取SPU 信息的数据
             let spuResult = await this.$API.spu.reqSpu(row.id)
             this.spu = spuResult.data
+            console.log(this.spu)
             // 获取品牌信息
             let tradeMarkResult = await this.$API.spu.reqTradeMarkList()
             this.tradeMarkList = tradeMarkResult.data
+            console.log(this.tradeMarkList)
             // 获取spu图片的数据
-            let spuImageResult = await this.$API.spu.reqTradeMarkList()
-            this.spuImageList = spuImageResult.data.forEach((item) => {
+            let spuImageResult = await this.$API.spu.reqSpuImageList(row.id)
+            // 有图片和路径的
+            let ImageList = spuImageResult.data
+
+            ImageList.forEach((item) => {
                 item.name = item.imgName
                 item.url = item.imgUrl
             })
+            this.spuImageList = ImageList
+            console.log(this.spuImageList)
 
             // 获取平台全部的销售属性
             let saleResult = await this.$API.spu.reqBaseSaleAttrList()
             this.saleAttrList = saleResult.data
+            console.log(this.saleAttrList)
         },
         handleClose(tag) {
             this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);

@@ -15,6 +15,7 @@ import API from "@/api"
 import '@/icons' // icon
 import '@/permission' // permission control
 import CategorySelect from "@/components/CategorySelect"
+import HintButton from '@/components/HintButton'
 
 /**
  * If you don't want to use mock-server
@@ -38,6 +39,7 @@ Vue.config.productionTip = false
 Vue.prototype.$API = API
 
 Vue.component(CategorySelect.name, CategorySelect)
+Vue.component(HintButton.name, HintButton)
 
 new Vue({
   el: '#app',

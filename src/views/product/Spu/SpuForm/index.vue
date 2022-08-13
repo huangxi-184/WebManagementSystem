@@ -80,7 +80,7 @@ export default {
                 spuSaleAttrList: [],
                 tmId: 0,
             },
-            attrId: 0,
+            attrId: '',
             // 存储SPU信息属性
             tradeMarkList: [],
             spuImageList: [],//存储SPU的图片数据
@@ -147,6 +147,7 @@ export default {
                     return item.name != item1.saleAttrName
                 })
             })
+            console.log('@@@',result)
             return result
         }
     }

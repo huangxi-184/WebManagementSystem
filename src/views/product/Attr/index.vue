@@ -53,7 +53,7 @@
                     </el-table-column>
                     <el-table-column prop="prop" label="操作" width="width">
                         <template slot-scope='{row,$index}'>
-                            <el-popconfirm :title="`确定删除${row.valueName}`" @onConfirm="deleteAttrValue(index)">
+                            <el-popconfirm :title="`确定删除${row.valueName}`" @onConfirm="deleteAttrValue($index)">
                                 <el-button type="danger" icon="el-icon-delete" size="mini" slot="reference"></el-button>
                             </el-popconfirm>
                         </template>
@@ -183,9 +183,9 @@ export default {
                 this.$refs[index].focus()
             )
         },
-        deleteAttrValue(index) {
+        deleteAttrValue($index) {
             // 删除属性值的项目
-            this.attrInfo.attrValueList.splice(index, 1);
+            this.attrInfo.attrValueList.splice($index, 1);
         },
         async saveOrUpdateAttr() {
             // 保存新增属性值和修改的属性值 若用户添加很多属性值

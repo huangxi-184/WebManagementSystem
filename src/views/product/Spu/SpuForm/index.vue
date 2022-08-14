@@ -73,7 +73,7 @@ export default {
             inputValue: '',
             dialogImageUrl: '',
             dialogVisible: false,
-            spu: {               
+            spu: {
                 description: "",
                 spuImageList: [],
                 spuName: "",
@@ -147,7 +147,6 @@ export default {
                     return item.name != item1.saleAttrName
                 })
             })
-            console.log('@@@',result)
             return result
         }
     }

@@ -98,6 +98,7 @@ export default {
             this.page = pager
             this.getPageList(pager)
         },
+
         async getPageList(pager = 1) {
             this.page = pager
             const { page, limit } = this
@@ -171,7 +172,7 @@ export default {
                     message: '删除成功!'
                 });
                 // 有数据就保留原页面，没有数据就去上一页
-                this.getPageList(this.list.length >1 ? this.page : this.page - 1)
+                this.getPageList(this.list.length > 1 ? this.page : this.page - 1)
             }).catch(() => {
                 this.$message({
                     type: 'info',

@@ -102,7 +102,7 @@ export default {
             this.scene = 1
             this.$refs.spu.initSpuData(row)
         },
-        changeScene(scene){
+        changeScene(scene) {
             this.scene = scene
         }
     },
